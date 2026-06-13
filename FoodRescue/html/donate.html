@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Donate Food — FoodRescue</title>
+  <link rel="stylesheet" href="../css/reset.css"/>
+  <link rel="stylesheet" href="../css/variables.css"/>
+  <link rel="stylesheet" href="../css/typography.css"/>
+  <link rel="stylesheet" href="../css/layout.css"/>
+  <link rel="stylesheet" href="../css/components.css"/>
+  <link rel="stylesheet" href="../css/navbar.css"/>
+  <link rel="stylesheet" href="../css/modal.css"/>
+  <link rel="stylesheet" href="../css/animations.css"/>
+  <link rel="stylesheet" href="../css/responsive.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    body { padding-top: 64px; background: var(--bg); }
+
+    .donate-hero {
+      background: linear-gradient(135deg, var(--green-deep) 0%, var(--green-mid) 100%);
+      color: #fff;
+      padding: var(--space-2xl) var(--space-xl);
+      text-align: center;
+    }
+    .donate-hero h1 { color: #fff; }
+    .donate-hero p  { color: rgba(255,255,255,0.8); max-width: 560px; margin: 12px auto 0; }
+
+    .donate-body {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--space-2xl) var(--space-lg);
+    }
+
+    .donate-form-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-2xl);
+      box-shadow: var(--shadow-md);
+    }
+
+    .form-section {
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-xl);
+      border-bottom: 1px solid var(--border);
+    }
+    .form-section:last-of-type { border-bottom: none; margin-bottom: 0; }
+
+    .form-section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--green-deep);
+      margin-bottom: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    .checkbox-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all var(--duration) var(--ease);
+      user-select: none;
+    }
+    .checkbox-chip input { display: none; }
+    .checkbox-chip:has(input:checked),
+    .checkbox-chip.checked {
+      background: var(--green-pale);
+      border-color: var(--green-fresh);
+      color: var(--green-deep);
+    }
+
+    textarea.input {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .photo-upload {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--duration) var(--ease);
+      background: var(--surface-2);
+    }
+    .photo-upload:hover {
+      border-color: var(--green-fresh);
+      background: var(--green-pale);
+    }
+    .photo-upload-icon { font-size: 2.5rem; margin-bottom: 8px; }
+    .photo-upload p    { font-size: 0.85rem; color: var(--smoke); }
+
+    .preview-card {
+      background: var(--green-pale);
+      border: 1px solid var(--green-light);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      margin-top: var(--space-xl);
+      display: none;
+    }
+    .preview-card.show { display: block; }
+
+    .preview-card h4 { font-family: var(--font-body); font-size: 0.85rem; font-weight: 700; color: var(--green-deep); margin-bottom: var(--space-sm); }
+
+    .preview-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      font-size: 0.88rem;
+      color: var(--text-primary);
+    }
+
+    .safe-tips {
+      background: var(--amber-pale);
+      border-left: 4px solid var(--amber);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: var(--space-md) var(--space-lg);
+      margin-top: var(--space-xl);
+    }
+    .safe-tips h4 { font-family: var(--font-body); font-size: 0.9rem; color: #7c4a00; margin-bottom: 8px; }
+    .safe-tips ul { padding-left: 18px; }
+    .safe-tips li { font-size: 0.83rem; color: #7c4a00; margin-bottom: 4px; }
+
+    @media (max-width: 640px) {
+      .form-row { grid-template-columns: 1fr; }
+      .donate-form-card { padding: var(--space-lg); }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-brand" onclick="window.location.href='../index.html'">
+      <span class="brand-icon">🌿</span>
+      <span class="brand-name">FoodRescue</span>
+    </div>
+    <div class="nav-links">
+      <a href="browse.html" class="nav-link">Browse Food</a>
+      <a href="donate.html" class="nav-link active">Donate Food</a>
+      <a href="impact.html" class="nav-link">Impact</a>
+      <a href="dashboard.html" class="nav-link">Dashboard</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-ghost" onclick="openModal('loginModal')">Sign In</button>
+      <button class="btn btn-primary" onclick="openModal('registerModal')">Join Free</button>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </nav>
+
+  <div class="donate-hero page-enter">
+    <h1>Share your surplus food</h1>
+    <p>List leftover food in under 2 minutes. We handle reservations, notifications, and pickup coordination for you.</p>
+  </div>
+
+  <div class="donate-body">
+    <div class="donate-form-card reveal">
+
+      <!-- SECTION 1: FOOD DETAILS -->
+      <div class="form-section">
+        <div class="form-section-title">🍱 Food Details</div>
+        <div class="form-group">
+          <label>Food Name *</label>
+          <input type="text" class="input" id="foodName" placeholder="e.g. Dal Rice Combo, Assorted Bread Loaves" oninput="updatePreview()" />
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea class="input" id="foodDesc" placeholder="Describe portions, freshness, any special notes…" oninput="updatePreview()"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Category</label>
+            <select class="input" id="foodCategory">
+              <option value="meals">Full Meals</option>
+              <option value="bakery">Bakery</option>
+              <option value="veg">Vegetables / Salads</option>
+              <option value="snacks">Snacks</option>
+              <option value="drinks">Drinks</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Quantity available *</label>
+            <input type="number" class="input" id="foodQty" min="1" value="5" placeholder="Number of servings/packs" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Dietary Tags</label>
+          <div class="checkbox-group">
+            <label class="checkbox-chip" onclick="this.classList.toggle('checked')">
+              <input type="checkbox" value="veg" /> 🥗 Vegetarian
+            </label>
+            <label class="checkbox-chip" onclick="this.classList.toggle('checked')">
+              <input type="checkbox" value="vegan" /> 🌱 Vegan
+            </label>
+            <label class="checkbox-chip" onclick="this.classList.toggle('checked')">
+              <input type="checkbox" value="allergen-free" /> ✅ Allergen-free
+            </label>
+            <label class="checkbox-chip" onclick="this.classList.toggle('checked')">
+              <input type="checkbox" value="gluten-free" /> 🌾 Gluten-free
+            </label>
+            <label class="checkbox-chip" onclick="this.classList.toggle('checked')">
+              <input type="checkbox" value="nut-free" /> 🥜 Nut-free
+            </label>
+          </div>
+        </div>
+
+        <!-- Photo upload -->
+        <div class="form-group">
+          <label>Photo (optional but increases reservations)</label>
+          <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+            <div class="photo-upload-icon">📸</div>
+            <p>Click to upload a photo of the food</p>
+            <p style="font-size:0.75rem;margin-top:4px">JPG, PNG up to 5MB</p>
+          </div>
+          <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhotoUpload(this)" />
+        </div>
+      </div>
+
+      <!-- SECTION 2: PRICING -->
+      <div class="form-section">
+        <div class="form-section-title">💰 Pricing</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Offer Type</label>
+            <select class="input" id="priceType" onchange="togglePriceInput(this.value)">
+              <option value="free">Free (donation)</option>
+              <option value="discounted">Discounted price</option>
+              <option value="payforward">Pay it forward</option>
+            </select>
+          </div>
+          <div class="form-group" id="priceInputGroup" style="display:none">
+            <label>Price per serving (₹)</label>
+            <input type="number" class="input" id="foodPrice" min="0" placeholder="0" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Original price (₹, for showing discount)</label>
+          <input type="number" class="input" id="originalPrice" min="0" placeholder="e.g. 80" />
+        </div>
+      </div>
+
+      <!-- SECTION 3: PICKUP WINDOW -->
+      <div class="form-section">
+        <div class="form-section-title">🕐 Pickup Window</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Pickup from *</label>
+            <input type="time" class="input" id="pickupFrom" value="18:00" />
+          </div>
+          <div class="form-group">
+            <label>Pickup until *</label>
+            <input type="time" class="input" id="pickupTo" value="20:00" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Pickup Address *</label>
+          <input type="text" class="input" id="pickupAddress" placeholder="Full address where food can be collected" />
+        </div>
+        <div class="form-group">
+          <label>Special pickup instructions</label>
+          <input type="text" class="input" id="pickupInstructions" placeholder="e.g. Enter from back gate, ask for Rajan" />
+        </div>
+      </div>
+
+      <!-- SECTION 4: CONTACT -->
+      <div class="form-section">
+        <div class="form-section-title">👤 Donor Contact</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your Name / Business Name *</label>
+            <input type="text" class="input" id="donorName" placeholder="e.g. Annapoorna Restaurant" />
+          </div>
+          <div class="form-group">
+            <label>Phone *</label>
+            <input type="tel" class="input" id="donorPhone" placeholder="+91 XXXXX XXXXX" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" class="input" id="donorEmail" placeholder="for reservation confirmations" />
+        </div>
+      </div>
+
+      <!-- PREVIEW -->
+      <div class="preview-card" id="listingPreview">
+        <h4>👁️ Listing preview</h4>
+        <div id="previewContent"></div>
+      </div>
+
+      <!-- FOOD SAFETY TIPS -->
+      <div class="safe-tips">
+        <h4>🛡️ Food Safety Reminder</h4>
+        <ul>
+          <li>Only list food that is safe to eat — cooked within the last 6 hours or properly stored.</li>
+          <li>Label allergens clearly. When in doubt, disclose.</li>
+          <li>You are protected under India's Good Samaritan Food Donation provisions.</li>
+          <li>Do not list raw or uncooked perishables unless they are sealed and fresh.</li>
+        </ul>
+      </div>
+
+      <div style="margin-top: var(--space-xl)">
+        <button class="btn btn-primary btn-lg btn-full" onclick="submitListing()">
+          🌿 Post Food Listing
+        </button>
+        <p style="font-size:0.78rem;color:var(--smoke);text-align:center;margin-top:8px">
+          Your listing goes live instantly. You'll receive reservation notifications by SMS & email.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALS -->
+  <div class="modal-overlay" id="loginModal" onclick="closeModal('loginModal')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+      <h2>Welcome back</h2>
+      <div class="form-group"><label>Email</label><input type="email" class="input" /></div>
+      <div class="form-group"><label>Password</label><input type="password" class="input" /></div>
+      <button class="btn btn-primary btn-full" onclick="handleLogin()">Sign In</button>
+    </div>
+  </div>
+  <div class="modal-overlay" id="registerModal" onclick="closeModal('registerModal')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
+      <h2>Join FoodRescue</h2>
+      <div class="role-selector">
+        <button class="role-btn" id="roleUser" onclick="selectRole('user')">🙋 I need food</button>
+        <button class="role-btn active" id="roleDonor" onclick="selectRole('donor')">🏪 I donate food</button>
+      </div>
+      <div class="form-group"><label>Business Name</label><input type="text" class="input" /></div>
+      <div class="form-group"><label>Email</label><input type="email" class="input" /></div>
+      <div class="form-group"><label>Phone</label><input type="tel" class="input" /></div>
+      <div class="form-group"><label>Password</label><input type="password" class="input" /></div>
+      <button class="btn btn-primary btn-full" onclick="handleRegister()">Create Donor Account</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="successModal" onclick="closeModal('successModal')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-success">
+        <div class="success-icon">🎉</div>
+        <h3>Listing is Live!</h3>
+        <p>Your food has been posted. Nearby users will be notified now.</p>
+        <p style="margin-top:12px">Reservation confirmations will be sent to your phone and email.</p>
+        <div style="margin-top:20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="window.location.href='browse.html'">View My Listing</button>
+          <button class="btn btn-outline" onclick="closeModal('successModal');resetForm()">Post Another</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initNavbarScroll();
+      initReveal();
+    });
+
+    function togglePriceInput(val) {
+      document.getElementById('priceInputGroup').style.display =
+        val === 'discounted' ? 'block' : 'none';
+    }
+
+    function handlePhotoUpload(input) {
+      if (input.files?.[0]) {
+        showToast('Photo added! ✅', 'success');
+      }
+    }
+
+    function updatePreview() {
+      const name = document.getElementById('foodName')?.value?.trim();
+      const desc = document.getElementById('foodDesc')?.value?.trim();
+      const preview = document.getElementById('listingPreview');
+      const content = document.getElementById('previewContent');
+      if (name) {
+        preview.classList.add('show');
+        content.innerHTML = `
+          <div class="preview-pill">
+            🍱 <strong>${name}</strong>
+            ${desc ? `<span style="color:var(--smoke);font-size:0.82rem"> — ${desc.slice(0,60)}${desc.length > 60 ? '…' : ''}</span>` : ''}
+          </div>
+        `;
+      } else {
+        preview.classList.remove('show');
+      }
+    }
+
+    function submitListing() {
+      const name    = document.getElementById('foodName')?.value?.trim();
+      const qty     = document.getElementById('foodQty')?.value;
+      const from    = document.getElementById('pickupFrom')?.value;
+      const to      = document.getElementById('pickupTo')?.value;
+      const address = document.getElementById('pickupAddress')?.value?.trim();
+      const donor   = document.getElementById('donorName')?.value?.trim();
+      const phone   = document.getElementById('donorPhone')?.value?.trim();
+
+      if (!name)    { showToast('Please enter a food name', 'error'); return; }
+      if (!address) { showToast('Please enter the pickup address', 'error'); return; }
+      if (!donor)   { showToast('Please enter your name or business name', 'error'); return; }
+      if (!phone)   { showToast('Please enter your phone number', 'error'); return; }
+
+      // Add to mock data
+      const newListing = {
+        id: genId('listing'),
+        emoji: getCategoryEmoji(document.getElementById('foodCategory')?.value),
+        name,
+        description: document.getElementById('foodDesc')?.value?.trim(),
+        donor,
+        donorId: genId('d'),
+        category: document.getElementById('foodCategory')?.value || 'meals',
+        tags: Array.from(document.querySelectorAll('.checkbox-chip.checked input')).map(i => i.value),
+        price: parseInt(document.getElementById('foodPrice')?.value) || 0,
+        originalPrice: parseInt(document.getElementById('originalPrice')?.value) || 0,
+        isFree: document.getElementById('priceType')?.value === 'free',
+        quantity: parseInt(qty) || 5,
+        claimed: 0,
+        distance: (Math.random() * 2).toFixed(1) * 1,
+        pickupStart: from,
+        pickupEnd: to,
+        urgent: false,
+        rating: 5.0,
+        ratingCount: 0,
+        postedAt: new Date(),
+      };
+
+      FoodRescueData.listings.unshift(newListing);
+      openModal('successModal');
+    }
+
+    function getCategoryEmoji(cat) {
+      const map = { meals:'🍱', bakery:'🥖', veg:'🥗', snacks:'🍘', drinks:'🧃', other:'🍽️' };
+      return map[cat] || '🍱';
+    }
+
+    function resetForm() {
+      document.querySelectorAll('.input').forEach(i => { i.value = ''; });
+      document.querySelectorAll('.checkbox-chip').forEach(c => c.classList.remove('checked'));
+      document.getElementById('listingPreview')?.classList.remove('show');
+    }
+  </script>
+</body>
+</html>

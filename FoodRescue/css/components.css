@@ -1,0 +1,206 @@
+/* === BUTTONS === */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 10px 22px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all var(--duration) var(--ease);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--green-deep);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(26,60,46,0.25);
+}
+.btn-primary:hover {
+  background: var(--green-mid);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(26,60,46,0.3);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-primary);
+}
+.btn-ghost:hover {
+  background: var(--surface-2);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--green-deep);
+  color: var(--green-deep);
+}
+.btn-outline:hover {
+  background: var(--green-deep);
+  color: #fff;
+}
+
+.btn-amber {
+  background: var(--amber);
+  color: var(--soil);
+}
+.btn-amber:hover {
+  background: var(--amber-dark);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.btn-sm { padding: 6px 14px; font-size: 0.8rem; }
+.btn-lg { padding: 14px 32px; font-size: 1rem; }
+.btn-full { width: 100%; justify-content: center; }
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* === INPUTS === */
+.input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  background: var(--surface);
+  color: var(--text-primary);
+  transition: border-color var(--duration) var(--ease);
+}
+.input:focus {
+  border-color: var(--green-fresh);
+  box-shadow: 0 0 0 3px rgba(64,145,108,0.15);
+}
+.input::placeholder { color: #B0B7C3; }
+
+.form-group {
+  margin-bottom: var(--space-md);
+}
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+}
+
+/* === BADGES === */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.badge-green {
+  background: var(--green-pale);
+  color: var(--green-deep);
+}
+
+.badge-amber {
+  background: var(--amber-pale);
+  color: #7c4a00;
+}
+
+.badge-red {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+.badge-free {
+  background: var(--green-pale);
+  color: var(--green-mid);
+  border: 1.5px solid var(--green-light);
+}
+
+/* === TAGS === */
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  background: var(--surface-2);
+  color: var(--green-deep);
+  border: 1px solid var(--green-pale);
+}
+
+/* === ROLE SELECTOR === */
+.role-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.role-btn {
+  padding: 12px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  background: var(--surface);
+  transition: all var(--duration) var(--ease);
+  cursor: pointer;
+}
+
+.role-btn.active {
+  border-color: var(--green-fresh);
+  background: var(--surface-2);
+  color: var(--green-deep);
+}
+
+/* === FILTER BAR === */
+.filter-bar {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-xl);
+}
+
+.filter-btn {
+  padding: 7px 16px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--border);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--surface);
+  transition: all var(--duration) var(--ease);
+  cursor: pointer;
+}
+
+.filter-btn:hover {
+  border-color: var(--green-light);
+  color: var(--green-deep);
+}
+
+.filter-btn.active {
+  background: var(--green-deep);
+  border-color: var(--green-deep);
+  color: #fff;
+}
+
+/* === STARS === */
+.stars {
+  color: #FBBF24;
+  font-size: 0.9rem;
+}
+
+/* === DIVIDER === */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: var(--space-lg) 0;
+}

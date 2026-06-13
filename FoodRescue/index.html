@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FoodRescue — Save Food. Feed People.</title>
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/typography.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/navbar.css" />
+  <link rel="stylesheet" href="css/hero.css" />
+  <link rel="stylesheet" href="css/cards.css" />
+  <link rel="stylesheet" href="css/modal.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-brand">
+      <span class="brand-icon">🌿</span>
+      <span class="brand-name">FoodRescue</span>
+    </div>
+    <div class="nav-links" id="navLinks">
+      <a href="html/browse.html" class="nav-link">Browse Food</a>
+      <a href="html/donate.html" class="nav-link">Donate Food</a>
+      <a href="html/impact.html" class="nav-link">Impact</a>
+      <a href="html/dashboard.html" class="nav-link">Dashboard</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-ghost" onclick="openModal('loginModal')">Sign In</button>
+      <button class="btn btn-primary" onclick="openModal('registerModal')">Join Free</button>
+    </div>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        <span>Live food listings near you</span>
+      </div>
+      <h1 class="hero-title">
+        Good food<br/>
+        <em class="hero-accent">shouldn't</em><br/>
+        go to waste.
+      </h1>
+      <p class="hero-subtitle">
+        Connect with restaurants, cafeterias, and bakeries offering surplus food — free or heavily discounted — before it hits the bin.
+      </p>
+      <div class="hero-cta">
+        <button class="btn btn-primary btn-lg" onclick="window.location.href='html/browse.html'">
+          Find Food Near Me →
+        </button>
+        <button class="btn btn-outline btn-lg" onclick="window.location.href='html/donate.html'">
+          I Have Food to Share
+        </button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-number" data-target="4280">0</span>
+          <span class="stat-label">Meals Rescued</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number" data-target="312">0</span>
+          <span class="stat-label">Active Donors</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number" data-target="1920">0</span>
+          <span class="stat-label">kg CO₂ Saved</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="food-ticker" id="foodTicker"></div>
+    </div>
+  </section>
+
+  <!-- LIVE LISTINGS STRIP -->
+  <section class="live-strip">
+    <div class="live-strip-label">
+      <span class="live-dot"></span> Live Now
+    </div>
+    <div class="live-scroll" id="liveScroll"></div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-it-works section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Simple process</span>
+        <h2 class="section-title">From surplus to someone's table in minutes</h2>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-icon">📍</div>
+          <h3>Share your location</h3>
+          <p>Allow location access to see available food rescue listings within your radius — no account needed to browse.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step-card">
+          <div class="step-icon">🍱</div>
+          <h3>Pick what you need</h3>
+          <p>Filter by dietary preference, distance, pickup time, and food type. Reserve your slot in one tap.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step-card">
+          <div class="step-icon">🤝</div>
+          <h3>Pick up & rate</h3>
+          <p>Arrive within your window, collect the food. Leave a rating — it keeps the platform honest for everyone.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOD LISTINGS PREVIEW -->
+  <section class="listings-preview section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Available now</span>
+        <h2 class="section-title">Food ready for rescue</h2>
+        <a href="html/browse.html" class="see-all-link">See all listings →</a>
+      </div>
+      <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="veg">🥗 Vegetarian</button>
+        <button class="filter-btn" data-filter="vegan">🌱 Vegan</button>
+        <button class="filter-btn" data-filter="bakery">🥖 Bakery</button>
+        <button class="filter-btn" data-filter="meals">🍛 Full Meals</button>
+        <button class="filter-btn" data-filter="free">🆓 Free</button>
+      </div>
+      <div class="cards-grid" id="homeListings"></div>
+      <div class="cta-center">
+        <button class="btn btn-primary" onclick="window.location.href='html/browse.html'">
+          View All Available Food
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPACT COUNTER -->
+  <section class="impact-banner">
+    <div class="container">
+      <div class="impact-grid">
+        <div class="impact-item">
+          <span class="impact-emoji">🌍</span>
+          <div class="impact-text">
+            <strong>1,920 kg</strong>
+            <span>CO₂ diverted from landfills</span>
+          </div>
+        </div>
+        <div class="impact-item">
+          <span class="impact-emoji">🍽️</span>
+          <div class="impact-text">
+            <strong>4,280 meals</strong>
+            <span>rescued this month</span>
+          </div>
+        </div>
+        <div class="impact-item">
+          <span class="impact-emoji">🏪</span>
+          <div class="impact-text">
+            <strong>312 donors</strong>
+            <span>restaurants & cafeterias</span>
+          </div>
+        </div>
+        <div class="impact-item">
+          <span class="impact-emoji">👥</span>
+          <div class="impact-text">
+            <strong>8,400+</strong>
+            <span>community members served</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Community voices</span>
+        <h2 class="section-title">Real stories, real impact</h2>
+      </div>
+      <div class="testimonial-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-quote">"As a student spending ₹3,000/month on food, FoodRescue saves me 30–40% on my monthly budget. The quality is always fresh."</div>
+          <div class="testimonial-author">
+            <div class="author-avatar" style="background:#4CAF50">A</div>
+            <div><strong>Arjun K.</strong><br/><small>Engineering Student, Mysuru</small></div>
+          </div>
+        </div>
+        <div class="testimonial-card featured">
+          <div class="testimonial-quote">"We were throwing away 8–10 kg of food every evening. Now it's near zero. The platform handles coordination — we just pack the boxes."</div>
+          <div class="testimonial-author">
+            <div class="author-avatar" style="background:#FF7043">R</div>
+            <div><strong>Rajan Mehta</strong><br/><small>Owner, Mehta Bakery & Café</small></div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-quote">"Our campus canteen used to waste 20% of daily production. FoodRescue gave us a measurable sustainability metric for our annual report."</div>
+          <div class="testimonial-author">
+            <div class="author-avatar" style="background:#7B1FA2">S</div>
+            <div><strong>Dr. Sunita Rao</strong><br/><small>Sustainability Head, NITK</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="brand-name">🌿 FoodRescue</div>
+          <p>Connecting surplus food with people who need it. Every meal saved is a step toward zero waste.</p>
+          <div class="sdg-badge">🎯 Aligned with UN SDG 2 & 12</div>
+        </div>
+        <div class="footer-links">
+          <h4>Platform</h4>
+          <a href="html/browse.html">Browse Food</a>
+          <a href="html/donate.html">Donate Food</a>
+          <a href="html/impact.html">Impact Dashboard</a>
+          <a href="html/dashboard.html">My Dashboard</a>
+        </div>
+        <div class="footer-links">
+          <h4>Community</h4>
+          <a href="#">How It Works</a>
+          <a href="#">Food Safety Guidelines</a>
+          <a href="#">Good Samaritan Act</a>
+          <a href="#">Partner With Us</a>
+        </div>
+        <div class="footer-links">
+          <h4>Contact</h4>
+          <a href="mailto:hello@foodrescue.in">hello@foodrescue.in</a>
+          <a href="#">SMS Alerts: Text JOIN to 9000</a>
+          <a href="#">Report an Issue</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 FoodRescue. Final Year Project — Made with 💚 to fight food waste.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODALS -->
+  <div class="modal-overlay" id="loginModal" onclick="closeModal('loginModal')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+      <h2>Welcome back</h2>
+      <p class="modal-subtitle">Sign in to reserve food or manage your donations.</p>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" placeholder="you@example.com" class="input" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" placeholder="••••••••" class="input" />
+      </div>
+      <button class="btn btn-primary btn-full" onclick="handleLogin()">Sign In</button>
+      <p class="modal-switch">No account? <a href="#" onclick="switchModal('loginModal','registerModal')">Join free →</a></p>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="registerModal" onclick="closeModal('registerModal')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
+      <h2>Join FoodRescue</h2>
+      <p class="modal-subtitle">Are you looking for food, or do you have food to share?</p>
+      <div class="role-selector">
+        <button class="role-btn active" id="roleUser" onclick="selectRole('user')">🙋 I need food</button>
+        <button class="role-btn" id="roleDonor" onclick="selectRole('donor')">🏪 I donate food</button>
+      </div>
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" placeholder="Your name" class="input" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" placeholder="you@example.com" class="input" />
+      </div>
+      <div class="form-group">
+        <label>Phone (for SMS alerts)</label>
+        <input type="tel" placeholder="+91 XXXXX XXXXX" class="input" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" placeholder="••••••••" class="input" />
+      </div>
+      <button class="btn btn-primary btn-full" onclick="handleRegister()">Create Account</button>
+      <p class="modal-switch">Already joined? <a href="#" onclick="switchModal('registerModal','loginModal')">Sign in →</a></p>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <!-- SCRIPTS -->
+  <script src="js/data.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/components/card.js"></script>
+  <script src="js/components/modal.js"></script>
+  <script src="js/components/ticker.js"></script>
+  <script src="js/components/filter.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

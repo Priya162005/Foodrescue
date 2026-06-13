@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Dashboard — FoodRescue</title>
+  <link rel="stylesheet" href="../css/reset.css"/>
+  <link rel="stylesheet" href="../css/variables.css"/>
+  <link rel="stylesheet" href="../css/typography.css"/>
+  <link rel="stylesheet" href="../css/layout.css"/>
+  <link rel="stylesheet" href="../css/components.css"/>
+  <link rel="stylesheet" href="../css/navbar.css"/>
+  <link rel="stylesheet" href="../css/cards.css"/>
+  <link rel="stylesheet" href="../css/modal.css"/>
+  <link rel="stylesheet" href="../css/dashboard.css"/>
+  <link rel="stylesheet" href="../css/animations.css"/>
+  <link rel="stylesheet" href="../css/responsive.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    body { background: var(--bg); }
+
+    /* NOTIFICATION BELL */
+    .notif-bell {
+      position: relative;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      transition: background var(--duration) var(--ease);
+    }
+    .notif-bell:hover { background: var(--surface-2); }
+    .notif-dot {
+      position: absolute;
+      top: 6px; right: 6px;
+      width: 8px; height: 8px;
+      background: #EF4444;
+      border-radius: 50%;
+      border: 2px solid var(--surface);
+    }
+
+    /* USER CARD */
+    .user-profile-card {
+      background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      color: #fff;
+      margin-bottom: var(--space-xl);
+      display: flex;
+      align-items: center;
+      gap: var(--space-lg);
+    }
+
+    .user-avatar-big {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+      border: 3px solid rgba(255,255,255,0.4);
+    }
+
+    .user-profile-info h2 {
+      color: #fff;
+      font-size: 1.4rem;
+      margin-bottom: 2px;
+    }
+
+    .user-profile-info p {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.85rem;
+    }
+
+    .user-badges {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .user-badge {
+      padding: 3px 10px;
+      background: rgba(255,255,255,0.15);
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+    }
+
+    /* RESERVATIONS LIST */
+    .reservations-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .reservation-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--duration) var(--ease);
+    }
+    .reservation-item:hover { transform: translateX(4px); }
+
+    .res-emoji {
+      font-size: 2rem;
+      width: 52px; height: 52px;
+      background: var(--surface-2);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .res-info { flex: 1; }
+    .res-info h4 { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-body); }
+    .res-info p  { font-size: 0.8rem; color: var(--smoke); margin-top: 2px; }
+
+    .res-code {
+      font-family: monospace;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--green-deep);
+      background: var(--green-pale);
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      letter-spacing: 0.1em;
+    }
+
+    .res-actions { display: flex; gap: 8px; }
+
+    /* NOTIFICATION PANEL */
+    .notif-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    .notif-header {
+      padding: var(--space-lg);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .notif-header h3 { font-family: var(--font-body); font-size: 0.95rem; font-weight: 700; }
+
+    .notif-item {
+      padding: var(--space-md) var(--space-lg);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-md);
+      transition: background var(--duration) var(--ease);
+      cursor: pointer;
+    }
+    .notif-item:last-child { border-bottom: none; }
+    .notif-item:hover { background: var(--surface-2); }
+    .notif-item.unread { background: rgba(64,145,108,0.04); }
+
+    .notif-unread-dot {
+      width: 8px; height: 8px;
+      background: var(--green-fresh);
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    .notif-text { font-size: 0.85rem; color: var(--text-primary); line-height: 1.5; }
+    .notif-time { font-size: 0.75rem; color: var(--smoke); margin-top: 2px; }
+
+    /* QUICK ACTIONS */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+    }
+
+    .quick-action-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      cursor: pointer;
+      text-align: left;
+      transition: all var(--duration) var(--ease);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .quick-action-btn:hover {
+      border-color: var(--green-light);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .qa-icon { font-size: 1.8rem; }
+    .qa-text strong { display: block; font-size: 0.9rem; color: var(--text-primary); }
+    .qa-text span   { font-size: 0.78rem; color: var(--smoke); }
+
+    /* EMPTY STATE */
+    .empty-state {
+      text-align: center;
+      padding: var(--space-2xl);
+      color: var(--smoke);
+    }
+    .empty-state .empty-icon { font-size: 3rem; margin-bottom: var(--space-md); }
+
+    /* RATING MODAL */
+    .star-rating {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      font-size: 2.2rem;
+      cursor: pointer;
+      margin: var(--space-lg) 0;
+    }
+
+    .star-rating span {
+      transition: transform var(--duration) var(--ease);
+      user-select: none;
+    }
+    .star-rating span:hover,
+    .star-rating span.active { transform: scale(1.2); color: #FBBF24; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-brand" onclick="window.location.href='../index.html'">
+      <span class="brand-icon">🌿</span>
+      <span class="brand-name">FoodRescue</span>
+    </div>
+    <div class="nav-links">
+      <a href="browse.html" class="nav-link">Browse Food</a>
+      <a href="donate.html" class="nav-link">Donate Food</a>
+      <a href="impact.html" class="nav-link">Impact</a>
+      <a href="dashboard.html" class="nav-link active">Dashboard</a>
+    </div>
+    <div class="nav-actions">
+      <div class="notif-bell" onclick="showSection('notifications')">
+        🔔
+        <div class="notif-dot"></div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="handleSignOut()">Sign Out</button>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </nav>
+
+  <div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Main</div>
+        <div class="sidebar-nav-item active" onclick="showSection('overview')" id="nav-overview">
+          <span class="nav-icon">📊</span> Overview
+        </div>
+        <div class="sidebar-nav-item" onclick="showSection('reservations')" id="nav-reservations">
+          <span class="nav-icon">🎟️</span> My Reservations
+          <span class="nav-count">3</span>
+        </div>
+        <div class="sidebar-nav-item" onclick="showSection('notifications')" id="nav-notifications">
+          <span class="nav-icon">🔔</span> Notifications
+          <span class="nav-count">2</span>
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Donate</div>
+        <div class="sidebar-nav-item" onclick="window.location.href='donate.html'" id="nav-donate">
+          <span class="nav-icon">🍱</span> Post Listing
+        </div>
+        <div class="sidebar-nav-item" onclick="showSection('mylistings')" id="nav-mylistings">
+          <span class="nav-icon">📋</span> My Listings
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Insights</div>
+        <div class="sidebar-nav-item" onclick="showSection('myimpact')" id="nav-myimpact">
+          <span class="nav-icon">🌍</span> My Impact
+        </div>
+        <div class="sidebar-nav-item" onclick="showSection('settings')" id="nav-settings">
+          <span class="nav-icon">⚙️</span> Settings
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="dashboard-main">
+
+      <!-- SECTION: OVERVIEW -->
+      <div id="section-overview">
+        <!-- USER CARD -->
+        <div class="user-profile-card">
+          <div class="user-avatar-big" id="dashAvatar">A</div>
+          <div class="user-profile-info">
+            <h2 id="dashName">Welcome back!</h2>
+            <p id="dashEmail">Sign in to see your full dashboard</p>
+            <div class="user-badges">
+              <span class="user-badge">🌿 Eco Rescuer</span>
+              <span class="user-badge">⭐ 4.9 rating</span>
+              <span class="user-badge">🎯 12 meals saved</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- STAT CARDS -->
+        <div class="stat-cards">
+          <div class="stat-card">
+            <div class="stat-card-icon">🍽️</div>
+            <div class="stat-card-value">12</div>
+            <div class="stat-card-label">Meals Reserved</div>
+            <div class="stat-card-delta">+3 this week</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon">🌿</div>
+            <div class="stat-card-value">6.4</div>
+            <div class="stat-card-label">kg Food Saved</div>
+            <div class="stat-card-delta">≈ 16 kg CO₂</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon">💰</div>
+            <div class="stat-card-value">₹840</div>
+            <div class="stat-card-label">Total Savings</div>
+            <div class="stat-card-delta">vs original prices</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon">⭐</div>
+            <div class="stat-card-value">4.9</div>
+            <div class="stat-card-label">Your Rating</div>
+            <div class="stat-card-delta">Based on 8 reviews</div>
+          </div>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="quick-actions">
+          <button class="quick-action-btn" onclick="window.location.href='browse.html'">
+            <span class="qa-icon">🔍</span>
+            <div class="qa-text">
+              <strong>Browse Food</strong>
+              <span>See what's available now near you</span>
+            </div>
+          </button>
+          <button class="quick-action-btn" onclick="window.location.href='donate.html'">
+            <span class="qa-icon">🍱</span>
+            <div class="qa-text">
+              <strong>Post Surplus Food</strong>
+              <span>List food to rescue in 2 minutes</span>
+            </div>
+          </button>
+          <button class="quick-action-btn" onclick="showSection('myimpact')">
+            <span class="qa-icon">🌍</span>
+            <div class="qa-text">
+              <strong>View My Impact</strong>
+              <span>CO₂ saved, meals rescued, more</span>
+            </div>
+          </button>
+          <button class="quick-action-btn" onclick="window.location.href='impact.html'">
+            <span class="qa-icon">📊</span>
+            <div class="qa-text">
+              <strong>Community Impact</strong>
+              <span>See platform-wide stats</span>
+            </div>
+          </button>
+        </div>
+
+        <!-- RECENT ACTIVITY -->
+        <div class="activity-table">
+          <div class="activity-table-header">
+            <h3>Recent Activity</h3>
+            <button class="btn btn-ghost btn-sm" onclick="showSection('reservations')">View all →</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Food Item</th>
+                <th>Donor</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Saved</th>
+              </tr>
+            </thead>
+            <tbody id="activityTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION: RESERVATIONS -->
+      <div id="section-reservations" style="display:none">
+        <div class="dashboard-header">
+          <h1>My Reservations</h1>
+          <p>Your food pickup reservations. Show your code at the door.</p>
+        </div>
+        <div class="reservations-list" id="reservationsList">
+          <div class="empty-state">
+            <div class="empty-icon">🎟️</div>
+            <p>No reservations yet.</p>
+            <button class="btn btn-primary" style="margin-top:16px" onclick="window.location.href='browse.html'">Browse Food →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION: NOTIFICATIONS -->
+      <div id="section-notifications" style="display:none">
+        <div class="dashboard-header">
+          <h1>Notifications</h1>
+          <p>Alerts about new listings, reservation confirmations, and platform updates.</p>
+        </div>
+        <div class="notif-panel">
+          <div class="notif-header">
+            <h3>Recent</h3>
+            <button class="btn btn-ghost btn-sm" onclick="markAllRead()">Mark all read</button>
+          </div>
+          <div id="notifList"></div>
+        </div>
+      </div>
+
+      <!-- SECTION: MY LISTINGS -->
+      <div id="section-mylistings" style="display:none">
+        <div class="dashboard-header">
+          <h1>My Listings</h1>
+          <p>Food you've posted for rescue. Manage or close listings here.</p>
+        </div>
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <p>You haven't posted any listings yet.</p>
+          <button class="btn btn-primary" style="margin-top:16px" onclick="window.location.href='donate.html'">Post Food →</button>
+        </div>
+      </div>
+
+      <!-- SECTION: MY IMPACT -->
+      <div id="section-myimpact" style="display:none">
+        <div class="dashboard-header">
+          <h1>My Personal Impact</h1>
+          <p>Your contribution to reducing food waste since you joined.</p>
+        </div>
+        <div class="stat-cards">
+          <div class="stat-card" style="border-top:3px solid var(--green-fresh)">
+            <div class="stat-card-icon">🍽️</div>
+            <div class="stat-card-value">12</div>
+            <div class="stat-card-label">Meals rescued</div>
+          </div>
+          <div class="stat-card" style="border-top:3px solid var(--amber)">
+            <div class="stat-card-icon">🌿</div>
+            <div class="stat-card-value">6.4 kg</div>
+            <div class="stat-card-label">Food diverted from landfill</div>
+          </div>
+          <div class="stat-card" style="border-top:3px solid var(--green-light)">
+            <div class="stat-card-icon">☁️</div>
+            <div class="stat-card-value">16 kg</div>
+            <div class="stat-card-label">CO₂ equivalent prevented</div>
+          </div>
+          <div class="stat-card" style="border-top:3px solid var(--green-mid)">
+            <div class="stat-card-icon">💰</div>
+            <div class="stat-card-value">₹840</div>
+            <div class="stat-card-label">Saved vs retail prices</div>
+          </div>
+        </div>
+        <div class="impact-chart-container" style="margin-top:var(--space-xl)">
+          <div class="chart-header">
+            <h3>Your monthly meal rescues</h3>
+          </div>
+          <div class="bar-chart" id="personalChart"></div>
+        </div>
+      </div>
+
+      <!-- SECTION: SETTINGS -->
+      <div id="section-settings" style="display:none">
+        <div class="dashboard-header">
+          <h1>Settings</h1>
+          <p>Manage your account, notifications, and preferences.</p>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-xl);max-width:560px">
+          <div class="form-group">
+            <label>Display Name</label>
+            <input type="text" class="input" id="settingsName" placeholder="Your name" />
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" class="input" id="settingsEmail" placeholder="you@example.com" />
+          </div>
+          <div class="form-group">
+            <label>Phone (SMS alerts)</label>
+            <input type="tel" class="input" id="settingsPhone" placeholder="+91 XXXXX XXXXX" />
+          </div>
+          <div class="form-group">
+            <label>Dietary Preferences</label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+              <label class="checkbox-chip" onclick="this.classList.toggle('checked')" style="display:flex;align-items:center;gap:6px;padding:7px 14px;border:1.5px solid var(--border);border-radius:999px;font-size:0.85rem;cursor:pointer">
+                🥗 Vegetarian only
+              </label>
+              <label class="checkbox-chip" onclick="this.classList.toggle('checked')" style="display:flex;align-items:center;gap:6px;padding:7px 14px;border:1.5px solid var(--border);border-radius:999px;font-size:0.85rem;cursor:pointer">
+                🌱 Vegan only
+              </label>
+              <label class="checkbox-chip" onclick="this.classList.toggle('checked')" style="display:flex;align-items:center;gap:6px;padding:7px 14px;border:1.5px solid var(--border);border-radius:999px;font-size:0.85rem;cursor:pointer">
+                ✅ Allergen-free only
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Notification Radius</label>
+            <select class="input">
+              <option>≤ 500m</option>
+              <option selected>≤ 1 km</option>
+              <option>≤ 2 km</option>
+              <option>≤ 5 km</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>SMS Alerts</label>
+            <select class="input">
+              <option>All new listings</option>
+              <option selected>Only matching preferences</option>
+              <option>Only reservation updates</option>
+              <option>Disabled</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- RATING MODAL -->
+  <div class="modal-overlay" id="ratingModal" onclick="closeModal('ratingModal')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal('ratingModal')">✕</button>
+      <h2>Rate your pickup</h2>
+      <p class="modal-subtitle" id="ratingSubtitle">How was the food and experience?</p>
+      <div class="star-rating" id="starRating">
+        <span onclick="setRating(1)" data-star="1">☆</span>
+        <span onclick="setRating(2)" data-star="2">☆</span>
+        <span onclick="setRating(3)" data-star="3">☆</span>
+        <span onclick="setRating(4)" data-star="4">☆</span>
+        <span onclick="setRating(5)" data-star="5">☆</span>
+      </div>
+      <div class="form-group">
+        <label>Comment (optional)</label>
+        <textarea class="input" id="ratingComment" placeholder="Share your experience…" style="min-height:70px"></textarea>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="submitRating()">Submit Rating</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/components/card.js"></script>
+  <script src="../js/components/modal.js"></script>
+  <script>
+    let currentRating = 0;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initNavbarScroll();
+      loadUserProfile();
+      renderActivityTable();
+      renderNotifications();
+      renderReservations();
+      renderPersonalChart();
+    });
+
+    function showSection(name) {
+      document.querySelectorAll('[id^="section-"]').forEach(s => s.style.display = 'none');
+      document.querySelectorAll('.sidebar-nav-item').forEach(n => n.classList.remove('active'));
+      const el = document.getElementById('section-' + name);
+      if (el) el.style.display = 'block';
+      const nav = document.getElementById('nav-' + name);
+      if (nav) nav.classList.add('active');
+    }
+
+    function loadUserProfile() {
+      const user = Store.get('user') || { name: 'Guest User', email: 'Sign in to personalise' };
+      document.getElementById('dashName').textContent = `Welcome, ${user.name}!`;
+      document.getElementById('dashEmail').textContent = user.email;
+      document.getElementById('dashAvatar').textContent = user.name[0].toUpperCase();
+      if (document.getElementById('settingsName')) document.getElementById('settingsName').value = user.name;
+      if (document.getElementById('settingsEmail')) document.getElementById('settingsEmail').value = user.email;
+    }
+
+    function renderActivityTable() {
+      const body = document.getElementById('activityTableBody');
+      if (!body) return;
+      const statusClass = { completed: 'status-completed', pending: 'status-pending', cancelled: 'status-cancelled' };
+      body.innerHTML = FoodRescueData.activityLog.map(a => `
+        <tr>
+          <td><strong>${a.item}</strong></td>
+          <td>${a.donor}</td>
+          <td>${a.time}</td>
+          <td><span class="status-pill ${statusClass[a.status]}">${a.status}</span></td>
+          <td>${a.savedKg > 0 ? `<span style="color:var(--green-fresh);font-weight:600">${a.savedKg} kg</span>` : '—'}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderNotifications() {
+      const list = document.getElementById('notifList');
+      if (!list) return;
+      list.innerHTML = FoodRescueData.notifications.map(n => `
+        <div class="notif-item ${n.read ? '' : 'unread'}" onclick="markRead('${n.id}',this)">
+          ${!n.read ? '<div class="notif-unread-dot"></div>' : '<div style="width:8px"></div>'}
+          <div>
+            <div class="notif-text">${n.text}</div>
+            <div class="notif-time">${n.time}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderReservations() {
+      const list = document.getElementById('reservationsList');
+      if (!list) return;
+      const saved = Store.get('reservations') || [];
+      if (!saved.length) return;
+      list.innerHTML = saved.map(r => `
+        <div class="reservation-item">
+          <div class="res-emoji">🍱</div>
+          <div class="res-info">
+            <h4>${r.listingName}</h4>
+            <p>📍 ${r.donor} &nbsp;·&nbsp; 🕐 ${r.slot}</p>
+          </div>
+          <div class="res-code">${r.code}</div>
+          <div class="res-actions">
+            <button class="btn btn-sm btn-outline" onclick="openRatingModal('${r.id}','${r.listingName}')">Rate</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderPersonalChart() {
+      const wrap = document.getElementById('personalChart');
+      if (!wrap) return;
+      const data = [
+        { month: 'Jan', meals: 0 }, { month: 'Feb', meals: 1 }, { month: 'Mar', meals: 2 },
+        { month: 'Apr', meals: 3 }, { month: 'May', meals: 4 }, { month: 'Jun', meals: 12 },
+      ];
+      const maxMeals = 12;
+      wrap.innerHTML = data.map(d => {
+        const h = Math.round((d.meals / maxMeals) * 130);
+        return `
+          <div class="bar-group">
+            <div class="bar-wrap">
+              <div class="bar meals" style="height:${Math.max(h,2)}px"></div>
+            </div>
+            <div class="bar-label">${d.month}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function markRead(id, el) {
+      const notif = FoodRescueData.notifications.find(n => n.id === id);
+      if (notif) { notif.read = true; el.classList.remove('unread'); }
+    }
+
+    function markAllRead() {
+      FoodRescueData.notifications.forEach(n => n.read = true);
+      renderNotifications();
+      showToast('All notifications marked as read', 'success');
+    }
+
+    function openRatingModal(resId, name) {
+      document.getElementById('ratingSubtitle').textContent = `How was: ${name}?`;
+      currentRating = 0;
+      document.querySelectorAll('.star-rating span').forEach(s => s.textContent = '☆');
+      openModal('ratingModal');
+    }
+
+    function setRating(n) {
+      currentRating = n;
+      document.querySelectorAll('.star-rating span').forEach((s, i) => {
+        s.textContent = i < n ? '★' : '☆';
+        s.classList.toggle('active', i < n);
+      });
+    }
+
+    function submitRating() {
+      if (!currentRating) { showToast('Please select a star rating', 'error'); return; }
+      closeModal('ratingModal');
+      showToast(`Thanks! You rated this ${currentRating} star${currentRating > 1 ? 's' : ''} ⭐`, 'success');
+    }
+
+    function saveSettings() {
+      const name  = document.getElementById('settingsName')?.value?.trim();
+      const email = document.getElementById('settingsEmail')?.value?.trim();
+      const phone = document.getElementById('settingsPhone')?.value?.trim();
+      if (name) {
+        const user = Store.get('user') || {};
+        Store.set('user', { ...user, name, email, phone });
+        loadUserProfile();
+      }
+      showToast('Settings saved ✅', 'success');
+    }
+
+    function handleSignOut() {
+      Store.remove('user');
+      FoodRescueData.currentUser = null;
+      showToast('Signed out. See you soon! 👋', 'info');
+      setTimeout(() => window.location.href = '../index.html', 1200);
+    }
+
+    // Reservation modal needs refresh hook
+    window.refreshHomeListings = () => {};
+  </script>
+</body>
+</html>

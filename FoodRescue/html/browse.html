@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Browse Food — FoodRescue</title>
+  <link rel="stylesheet" href="../css/reset.css" />
+  <link rel="stylesheet" href="../css/variables.css" />
+  <link rel="stylesheet" href="../css/typography.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/navbar.css" />
+  <link rel="stylesheet" href="../css/cards.css" />
+  <link rel="stylesheet" href="../css/modal.css" />
+  <link rel="stylesheet" href="../css/animations.css" />
+  <link rel="stylesheet" href="../css/responsive.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    body { padding-top: 64px; }
+
+    .browse-header {
+      background: var(--green-deep);
+      color: #fff;
+      padding: var(--space-2xl) var(--space-xl);
+      text-align: center;
+    }
+    .browse-header h1 { color: #fff; font-size: 2.4rem; margin-bottom: 8px; }
+    .browse-header p  { color: rgba(255,255,255,0.75); }
+
+    .browse-toolbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: var(--space-md) var(--space-xl);
+      display: flex;
+      gap: var(--space-md);
+      align-items: center;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 64px;
+      z-index: 50;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 200px;
+      max-width: 360px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 9px 14px 9px 38px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-full);
+      font-size: 0.9rem;
+      background: var(--bg);
+      transition: border-color var(--duration) var(--ease);
+    }
+    .search-box input:focus {
+      border-color: var(--green-fresh);
+      box-shadow: 0 0 0 3px rgba(64,145,108,0.15);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.85rem;
+      pointer-events: none;
+    }
+
+    .sort-select {
+      padding: 9px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      background: var(--bg);
+      cursor: pointer;
+      color: var(--text-primary);
+    }
+
+    .location-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+      background: var(--bg);
+      transition: all var(--duration) var(--ease);
+    }
+    .location-btn:hover, .location-btn.active {
+      border-color: var(--green-fresh);
+      color: var(--green-deep);
+    }
+
+    .results-count {
+      font-size: 0.85rem;
+      color: var(--smoke);
+      margin-left: auto;
+    }
+
+    .browse-body {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--space-xl);
+    }
+
+    .browse-filter-row {
+      margin-bottom: var(--space-xl);
+    }
+
+    .map-placeholder {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      height: 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-xl);
+      cursor: pointer;
+      transition: background var(--duration) var(--ease);
+    }
+    .map-placeholder:hover { background: var(--green-pale); }
+
+    .map-placeholder-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+
+    .map-placeholder p {
+      font-size: 0.9rem;
+      color: var(--smoke);
+    }
+
+    .distance-chips {
+      display: flex;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+      flex-wrap: wrap;
+    }
+
+    .distance-chip {
+      padding: 5px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all var(--duration) var(--ease);
+    }
+    .distance-chip:hover { border-color: var(--green-light); color: var(--green-deep); }
+    .distance-chip.active { background: var(--green-deep); border-color: var(--green-deep); color: #fff; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-brand" onclick="window.location.href='../index.html'">
+      <span class="brand-icon">🌿</span>
+      <span class="brand-name">FoodRescue</span>
+    </div>
+    <div class="nav-links">
+      <a href="browse.html" class="nav-link active">Browse Food</a>
+      <a href="donate.html" class="nav-link">Donate Food</a>
+      <a href="impact.html" class="nav-link">Impact</a>
+      <a href="dashboard.html" class="nav-link">Dashboard</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-ghost" onclick="openModal('loginModal')">Sign In</button>
+      <button class="btn btn-primary" onclick="openModal('registerModal')">Join Free</button>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </nav>
+
+  <!-- HEADER -->
+  <div class="browse-header">
+    <h1>Food available near you</h1>
+    <p>Browse surplus food from restaurants, canteens, and bakeries. Reserve in seconds.</p>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="browse-toolbar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search food, donor, tag…"
+             oninput="handleSearch(this.value)" />
+    </div>
+    <select class="sort-select" id="sortSelect" onchange="handleSort(this.value)">
+      <option value="newest">Latest first</option>
+      <option value="nearest">Nearest first</option>
+      <option value="price">Lowest price</option>
+      <option value="expiring">Expiring soon</option>
+      <option value="rating">Top rated</option>
+    </select>
+    <button class="location-btn" id="locationBtn" onclick="requestLocation()">
+      📍 Use my location
+    </button>
+    <span class="results-count" id="resultsCount">Showing all listings</span>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="browse-body">
+
+    <!-- MAP PLACEHOLDER -->
+    <div class="map-placeholder" onclick="showToast('Map view requires location access. Click Use my location above.', 'info')">
+      <div class="map-placeholder-icon">🗺️</div>
+      <p>Enable location to see listings on a map</p>
+      <p style="font-size:0.78rem;margin-top:4px;color:var(--green-fresh);font-weight:600">Click to enable →</p>
+    </div>
+
+    <!-- DISTANCE CHIPS -->
+    <div class="distance-chips">
+      <span class="label" style="margin-right:4px;align-self:center">Radius:</span>
+      <button class="distance-chip active" data-km="all" onclick="filterByDistance(this, 'all')">All</button>
+      <button class="distance-chip" data-km="0.5" onclick="filterByDistance(this, 0.5)">≤ 500m</button>
+      <button class="distance-chip" data-km="1" onclick="filterByDistance(this, 1)">≤ 1 km</button>
+      <button class="distance-chip" data-km="2" onclick="filterByDistance(this, 2)">≤ 2 km</button>
+      <button class="distance-chip" data-km="5" onclick="filterByDistance(this, 5)">≤ 5 km</button>
+    </div>
+
+    <!-- CATEGORY FILTER -->
+    <div class="filter-bar browse-filter-row">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="veg">🥗 Vegetarian</button>
+      <button class="filter-btn" data-filter="vegan">🌱 Vegan</button>
+      <button class="filter-btn" data-filter="bakery">🥖 Bakery</button>
+      <button class="filter-btn" data-filter="meals">🍛 Full Meals</button>
+      <button class="filter-btn" data-filter="free">🆓 Free Only</button>
+    </div>
+
+    <!-- CARDS -->
+    <div class="cards-grid" id="browseListings"></div>
+  </div>
+
+  <!-- MODALS (same as homepage) -->
+  <div class="modal-overlay" id="loginModal" onclick="closeModal('loginModal')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+      <h2>Welcome back</h2>
+      <p class="modal-subtitle">Sign in to reserve food.</p>
+      <div class="form-group"><label>Email</label><input type="email" placeholder="you@example.com" class="input" /></div>
+      <div class="form-group"><label>Password</label><input type="password" placeholder="••••••••" class="input" /></div>
+      <button class="btn btn-primary btn-full" onclick="handleLogin()">Sign In</button>
+      <p class="modal-switch">No account? <a href="#" onclick="switchModal('loginModal','registerModal')">Join free →</a></p>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="registerModal" onclick="closeModal('registerModal')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
+      <h2>Join FoodRescue</h2>
+      <div class="role-selector">
+        <button class="role-btn active" id="roleUser" onclick="selectRole('user')">🙋 I need food</button>
+        <button class="role-btn" id="roleDonor" onclick="selectRole('donor')">🏪 I donate food</button>
+      </div>
+      <div class="form-group"><label>Full Name</label><input type="text" class="input" /></div>
+      <div class="form-group"><label>Email</label><input type="email" class="input" /></div>
+      <div class="form-group"><label>Phone</label><input type="tel" class="input" /></div>
+      <div class="form-group"><label>Password</label><input type="password" class="input" /></div>
+      <button class="btn btn-primary btn-full" onclick="handleRegister()">Create Account</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/components/card.js"></script>
+  <script src="../js/components/modal.js"></script>
+  <script src="../js/components/filter.js"></script>
+
+  <script>
+    let currentData = [...FoodRescueData.listings];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initNavbarScroll();
+      initReveal();
+      renderAll();
+      initBrowseFilters();
+    });
+
+    function renderAll() {
+      renderCards('browseListings', currentData);
+      document.getElementById('resultsCount').textContent = `Showing ${currentData.length} listing${currentData.length !== 1 ? 's' : ''}`;
+    }
+
+    function handleSearch(q) {
+      const sorted = sortListings(document.getElementById('sortSelect').value, FoodRescueData.listings);
+      applySearch(q, sorted, 'browseListings');
+      const count = document.querySelectorAll('#browseListings .food-card').length;
+      document.getElementById('resultsCount').textContent = `Showing ${count} listing${count !== 1 ? 's' : ''}`;
+    }
+
+    function handleSort(method) {
+      currentData = sortListings(method, FoodRescueData.listings);
+      renderCards('browseListings', currentData);
+    }
+
+    function filterByDistance(btn, km) {
+      document.querySelectorAll('.distance-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      currentData = km === 'all'
+        ? [...FoodRescueData.listings]
+        : FoodRescueData.listings.filter(l => l.distance <= km);
+      renderAll();
+    }
+
+    function initBrowseFilters() {
+      document.querySelectorAll('.filter-bar .filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-bar .filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentData = btn.dataset.filter === 'all'
+            ? [...FoodRescueData.listings]
+            : btn.dataset.filter === 'free'
+              ? FoodRescueData.listings.filter(d => d.isFree)
+              : FoodRescueData.listings.filter(d => d.category === btn.dataset.filter || d.tags.includes(btn.dataset.filter));
+          renderAll();
+        });
+      });
+    }
+
+    function requestLocation() {
+      const btn = document.getElementById('locationBtn');
+      btn.textContent = '⏳ Getting location…';
+      getUserLocation(
+        (lat, lng) => {
+          btn.textContent = '✅ Location found';
+          btn.classList.add('active');
+          showToast(`Location set! Showing listings near you.`, 'success');
+        },
+        (err) => {
+          btn.textContent = '📍 Use my location';
+          showToast('Could not get location. Please allow access.', 'error');
+        }
+      );
+    }
+
+    // Make reservation refresh work on browse page too
+    window.refreshHomeListings = () => renderAll();
+  </script>
+</body>
+</html>

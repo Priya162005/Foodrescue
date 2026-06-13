@@ -1,0 +1,183 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 40, 36, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-md) var(--ease);
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  padding: var(--space-2xl);
+  max-width: 440px;
+  width: 100%;
+  position: relative;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(24px) scale(0.97);
+  transition: transform var(--duration-md) var(--ease-spring);
+}
+
+.modal-overlay.open .modal {
+  transform: translateY(0) scale(1);
+}
+
+.modal-close {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: none;
+  font-size: 0.85rem;
+  color: var(--smoke);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background var(--duration) var(--ease);
+}
+.modal-close:hover {
+  background: var(--border);
+  color: var(--text-primary);
+}
+
+.modal h2 {
+  font-size: 1.6rem;
+  margin-bottom: 6px;
+}
+
+.modal-subtitle {
+  font-size: 0.9rem;
+  color: var(--smoke);
+  margin-bottom: var(--space-lg);
+}
+
+.modal-switch {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--smoke);
+  margin-top: var(--space-md);
+}
+.modal-switch a {
+  color: var(--green-fresh);
+  font-weight: 600;
+}
+.modal-switch a:hover { text-decoration: underline; }
+
+/* RESERVATION MODAL specifics */
+.modal-food-preview {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  background: var(--surface-2);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.modal-food-emoji {
+  font-size: 2.5rem;
+}
+
+.modal-food-info h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+  margin-bottom: 2px;
+}
+
+.modal-food-info p {
+  font-size: 0.82rem;
+  color: var(--smoke);
+}
+
+.time-slots {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.time-slot {
+  padding: 10px 8px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration) var(--ease);
+  color: var(--text-secondary);
+}
+
+.time-slot:hover {
+  border-color: var(--green-fresh);
+  color: var(--green-deep);
+}
+
+.time-slot.selected {
+  background: var(--green-deep);
+  border-color: var(--green-deep);
+  color: #fff;
+}
+
+.time-slot.full {
+  opacity: 0.4;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* SUCCESS STATE */
+.modal-success {
+  text-align: center;
+  padding: var(--space-md) 0;
+}
+
+.modal-success .success-icon {
+  font-size: 3.5rem;
+  margin-bottom: var(--space-md);
+  animation: pop-in 0.4s var(--ease-spring);
+}
+
+.modal-success h3 {
+  font-size: 1.4rem;
+  margin-bottom: var(--space-sm);
+  font-family: var(--font-body);
+}
+
+.modal-success p {
+  font-size: 0.9rem;
+  color: var(--smoke);
+}
+
+.reservation-code {
+  display: inline-block;
+  padding: 8px 20px;
+  background: var(--green-pale);
+  border: 1.5px dashed var(--green-light);
+  border-radius: var(--radius-md);
+  font-family: monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--green-deep);
+  letter-spacing: 0.15em;
+  margin: var(--space-md) 0;
+}
+
+@keyframes pop-in {
+  from { transform: scale(0.4); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}

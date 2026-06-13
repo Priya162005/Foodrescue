@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Impact Dashboard — FoodRescue</title>
+  <link rel="stylesheet" href="../css/reset.css"/>
+  <link rel="stylesheet" href="../css/variables.css"/>
+  <link rel="stylesheet" href="../css/typography.css"/>
+  <link rel="stylesheet" href="../css/layout.css"/>
+  <link rel="stylesheet" href="../css/components.css"/>
+  <link rel="stylesheet" href="../css/navbar.css"/>
+  <link rel="stylesheet" href="../css/dashboard.css"/>
+  <link rel="stylesheet" href="../css/animations.css"/>
+  <link rel="stylesheet" href="../css/responsive.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    body { padding-top: 64px; background: var(--bg); }
+
+    .impact-page-hero {
+      background: linear-gradient(135deg, var(--green-deep) 0%, var(--green-mid) 100%);
+      padding: var(--space-2xl) var(--space-xl);
+      text-align: center;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .impact-page-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 80% 30%, rgba(116,198,157,0.25) 0%, transparent 70%);
+    }
+    .impact-page-hero h1 { color: #fff; font-size: 2.8rem; position: relative; }
+    .impact-page-hero p  { color: rgba(255,255,255,0.78); max-width: 580px; margin: 12px auto 0; position: relative; }
+
+    .impact-body {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: var(--space-2xl) var(--space-lg);
+    }
+
+    /* BIG METRICS ROW */
+    .big-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-md);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .big-metric-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      text-align: center;
+      box-shadow: var(--shadow-card);
+      transition: transform var(--duration-md) var(--ease-spring);
+    }
+    .big-metric-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+
+    .big-metric-icon { font-size: 2.4rem; margin-bottom: var(--space-sm); }
+
+    .big-metric-value {
+      font-family: var(--font-display);
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: var(--green-deep);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .big-metric-label {
+      font-size: 0.82rem;
+      color: var(--smoke);
+      font-weight: 500;
+    }
+
+    .big-metric-trend {
+      margin-top: 8px;
+      font-size: 0.78rem;
+      color: var(--live);
+      font-weight: 600;
+    }
+
+    /* CHART CARDS */
+    .chart-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      box-shadow: var(--shadow-card);
+    }
+
+    .chart-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--space-xl);
+      font-family: var(--font-body);
+    }
+
+    /* BAR CHART */
+    .bar-chart-wrap {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 180px;
+    }
+
+    .bar-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      height: 100%;
+      justify-content: flex-end;
+    }
+
+    .bar-stack {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      gap: 2px;
+      width: 100%;
+    }
+
+    .bar-fill {
+      width: 100%;
+      border-radius: 4px 4px 0 0;
+      transition: height 0.8s var(--ease-spring);
+    }
+
+    .bar-fill.green { background: var(--green-fresh); }
+    .bar-fill.amber { background: var(--amber); }
+
+    .bar-col-label {
+      font-size: 0.7rem;
+      color: var(--smoke);
+    }
+
+    .bar-col-value {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--green-deep);
+    }
+
+    /* DONUT CHART */
+    .donut-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-lg);
+    }
+
+    .donut-svg { transform: rotate(-90deg); }
+
+    .donut-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) rotate(90deg);
+      text-align: center;
+    }
+
+    .donut-container {
+      position: relative;
+      width: 140px; height: 140px;
+      flex-shrink: 0;
+    }
+
+    .donut-legend {
+      width: 100%;
+    }
+
+    .donut-legend-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 0.82rem;
+    }
+
+    .donut-legend-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-secondary);
+    }
+
+    .donut-legend-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .donut-legend-val {
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* MONTHLY TREND */
+    .trend-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      height: 120px;
+      margin-bottom: var(--space-lg);
+    }
+
+    .trend-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      height: 100%;
+      justify-content: flex-end;
+    }
+
+    .trend-bar {
+      width: 100%;
+      background: linear-gradient(to top, var(--green-mid), var(--green-light));
+      border-radius: 4px 4px 0 0;
+      min-height: 4px;
+      transition: height 1s var(--ease-spring);
+    }
+
+    .trend-label {
+      font-size: 0.68rem;
+      color: var(--smoke);
+    }
+
+    /* LEADERBOARD */
+    .leaderboard-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      box-shadow: var(--shadow-card);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .leaderboard-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .leaderboard-item:last-child { border-bottom: none; }
+
+    .rank-badge {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .rank-1 { background: #FEF9C3; color: #854D0E; }
+    .rank-2 { background: #F3F4F6; color: #374151; }
+    .rank-3 { background: #FFF7ED; color: #92400E; }
+    .rank-n { background: var(--surface-2); color: var(--smoke); }
+
+    .leaderboard-info { flex: 1; }
+    .leaderboard-info strong { font-size: 0.92rem; color: var(--text-primary); }
+    .leaderboard-info span  { font-size: 0.78rem; color: var(--smoke); display: block; }
+
+    .leaderboard-meals {
+      text-align: right;
+      font-size: 0.88rem;
+    }
+    .leaderboard-meals strong { color: var(--green-deep); display: block; }
+    .leaderboard-meals small  { color: var(--smoke); }
+
+    .leaderboard-bar-wrap {
+      width: 80px;
+      height: 6px;
+      background: var(--surface-2);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .leaderboard-bar-fill {
+      height: 100%;
+      background: var(--green-fresh);
+      border-radius: 3px;
+    }
+
+    /* SDG SECTION */
+    .sdg-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      box-shadow: var(--shadow-card);
+    }
+
+    .sdg-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-md);
+      margin-top: var(--space-lg);
+    }
+
+    .sdg-card {
+      border-radius: var(--radius-lg);
+      padding: var(--space-lg);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-md);
+    }
+
+    .sdg-icon {
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+
+    .sdg-card h4 {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .sdg-card p {
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .big-metrics  { grid-template-columns: repeat(2, 1fr); }
+      .chart-grid   { grid-template-columns: 1fr; }
+      .sdg-grid     { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .big-metrics  { grid-template-columns: 1fr 1fr; }
+      .big-metric-value { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-brand" onclick="window.location.href='../index.html'">
+      <span class="brand-icon">🌿</span>
+      <span class="brand-name">FoodRescue</span>
+    </div>
+    <div class="nav-links">
+      <a href="browse.html" class="nav-link">Browse Food</a>
+      <a href="donate.html" class="nav-link">Donate Food</a>
+      <a href="impact.html" class="nav-link active">Impact</a>
+      <a href="dashboard.html" class="nav-link">Dashboard</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-ghost" onclick="openModal('loginModal')">Sign In</button>
+      <button class="btn btn-primary">Join Free</button>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </nav>
+
+  <div class="impact-page-hero page-enter">
+    <h1>Our collective impact</h1>
+    <p>Every reserved meal is a step toward zero food waste. Here's what the FoodRescue community has achieved together.</p>
+  </div>
+
+  <div class="impact-body">
+
+    <!-- BIG METRICS -->
+    <div class="big-metrics">
+      <div class="big-metric-card reveal reveal-delay-1">
+        <div class="big-metric-icon">🍽️</div>
+        <div class="big-metric-value" data-target="4280" id="m1">0</div>
+        <div class="big-metric-label">Meals rescued this month</div>
+        <div class="big-metric-trend">↑ 34% from last month</div>
+      </div>
+      <div class="big-metric-card reveal reveal-delay-2">
+        <div class="big-metric-icon">🌿</div>
+        <div class="big-metric-value" data-target="2140" id="m2">0</div>
+        <div class="big-metric-label">kg of food saved from landfills</div>
+        <div class="big-metric-trend">↑ 28% from last month</div>
+      </div>
+      <div class="big-metric-card reveal reveal-delay-3">
+        <div class="big-metric-icon">☁️</div>
+        <div class="big-metric-value" data-target="1920" id="m3">0</div>
+        <div class="big-metric-label">kg CO₂ equivalent prevented</div>
+        <div class="big-metric-trend">= 480 car trips avoided</div>
+      </div>
+      <div class="big-metric-card reveal reveal-delay-4">
+        <div class="big-metric-icon">💚</div>
+        <div class="big-metric-value" data-target="8400" id="m4">0</div>
+        <div class="big-metric-label">Community members served</div>
+        <div class="big-metric-trend">↑ 22% from last month</div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW -->
+    <div class="chart-grid">
+
+      <!-- WEEKLY BAR CHART -->
+      <div class="chart-card reveal">
+        <div class="chart-title">Weekly meals rescued vs. food still wasted</div>
+        <div style="display:flex;gap:16px;margin-bottom:16px;">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--green-fresh)"></div> Meals rescued</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div> Estimated waste remaining</div>
+        </div>
+        <div class="bar-chart-wrap" id="weeklyChart"></div>
+      </div>
+
+      <!-- DONUT: FOOD CATEGORIES -->
+      <div class="chart-card reveal">
+        <div class="chart-title">Rescued food by type</div>
+        <div class="donut-wrap">
+          <div class="donut-container">
+            <svg class="donut-svg" viewBox="0 0 120 120" width="140" height="140">
+              <circle cx="60" cy="60" r="45" fill="none" stroke="var(--surface-2)" stroke-width="18"/>
+              <circle cx="60" cy="60" r="45" fill="none" stroke="var(--green-fresh)"
+                      stroke-width="18" stroke-dasharray="127 156" stroke-linecap="round"/>
+              <circle cx="60" cy="60" r="45" fill="none" stroke="var(--amber)"
+                      stroke-width="18" stroke-dasharray="63 220" stroke-dashoffset="-127" stroke-linecap="round"/>
+              <circle cx="60" cy="60" r="45" fill="none" stroke="var(--green-light)"
+                      stroke-width="18" stroke-dasharray="47 236" stroke-dashoffset="-190" stroke-linecap="round"/>
+              <circle cx="60" cy="60" r="45" fill="none" stroke="var(--amber-dark)"
+                      stroke-width="18" stroke-dasharray="46 237" stroke-dashoffset="-237"/>
+            </svg>
+            <div class="donut-center">
+              <strong style="font-size:1.2rem;color:var(--green-deep);font-family:var(--font-display)">4,280</strong>
+              <div style="font-size:0.65rem;color:var(--smoke)">meals</div>
+            </div>
+          </div>
+          <div class="donut-legend">
+            <div class="donut-legend-item">
+              <div class="donut-legend-label"><div class="donut-legend-dot" style="background:var(--green-fresh)"></div>Full Meals</div>
+              <div class="donut-legend-val">45%</div>
+            </div>
+            <div class="donut-legend-item">
+              <div class="donut-legend-label"><div class="donut-legend-dot" style="background:var(--amber)"></div>Bakery</div>
+              <div class="donut-legend-val">22%</div>
+            </div>
+            <div class="donut-legend-item">
+              <div class="donut-legend-label"><div class="donut-legend-dot" style="background:var(--green-light)"></div>Veg / Salads</div>
+              <div class="donut-legend-val">17%</div>
+            </div>
+            <div class="donut-legend-item">
+              <div class="donut-legend-label"><div class="donut-legend-dot" style="background:var(--amber-dark)"></div>Snacks & Other</div>
+              <div class="donut-legend-val">16%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MONTHLY TREND -->
+    <div class="chart-card reveal" style="margin-bottom:var(--space-2xl)">
+      <div class="chart-title">Monthly meals rescued — 2025</div>
+      <div class="trend-chart" id="monthlyChart"></div>
+      <div style="text-align:center;font-size:0.78rem;color:var(--smoke)">
+        ✅ Platform launched Jan 2025 &nbsp;·&nbsp; Doubled every 2 months
+      </div>
+    </div>
+
+    <!-- TOP DONORS LEADERBOARD -->
+    <div class="leaderboard-card reveal">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-lg)">
+        <h3 style="font-family:var(--font-body);font-size:1rem;font-weight:700">🏆 Top food rescue donors this month</h3>
+        <span class="badge badge-green">June 2025</span>
+      </div>
+      <div id="leaderboardList"></div>
+    </div>
+
+    <!-- SDG ALIGNMENT -->
+    <div class="sdg-section reveal">
+      <h3 style="font-family:var(--font-body);font-size:1rem;font-weight:700;margin-bottom:4px">🎯 UN Sustainable Development Goals alignment</h3>
+      <p style="font-size:0.85rem;color:var(--smoke)">FoodRescue directly contributes to three UN SDGs.</p>
+      <div class="sdg-grid">
+        <div class="sdg-card" style="background:rgba(244,162,97,0.1)">
+          <div class="sdg-icon">🌾</div>
+          <div>
+            <h4 style="color:#7c4a00">SDG 2 — Zero Hunger</h4>
+            <p style="color:#7c4a00">Ensuring surplus food reaches people facing food insecurity rather than landfills. 4,280+ meals redistributed this month.</p>
+          </div>
+        </div>
+        <div class="sdg-card" style="background:rgba(64,145,108,0.1)">
+          <div class="sdg-icon">♻️</div>
+          <div>
+            <h4 style="color:var(--green-deep)">SDG 12 — Responsible Consumption</h4>
+            <p style="color:var(--green-mid)">Cutting food waste at source. By 2030 SDG target is to halve per capita global food waste — we're accelerating that locally.</p>
+          </div>
+        </div>
+        <div class="sdg-card" style="background:rgba(116,198,157,0.1)">
+          <div class="sdg-icon">🌍</div>
+          <div>
+            <h4 style="color:var(--green-deep)">SDG 13 — Climate Action</h4>
+            <p style="color:var(--green-mid)">Food waste in landfills produces methane, a potent greenhouse gas. 1,920 kg CO₂e prevented this month alone.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="loginModal" onclick="closeModal('loginModal')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+      <h2>Welcome back</h2>
+      <div class="form-group"><label>Email</label><input type="email" class="input" /></div>
+      <div class="form-group"><label>Password</label><input type="password" class="input" /></div>
+      <button class="btn btn-primary btn-full" onclick="handleLogin()">Sign In</button>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/utils.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initNavbarScroll();
+      initReveal();
+      animateCounters();
+      renderWeeklyChart();
+      renderMonthlyChart();
+      renderLeaderboard();
+    });
+
+    function animateCounters() {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            const target = parseInt(e.target.dataset.target);
+            countUp(e.target, target, 1600);
+            observer.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.4 });
+      document.querySelectorAll('[data-target]').forEach(el => observer.observe(el));
+    }
+
+    function renderWeeklyChart() {
+      const data = FoodRescueData.impact.weeklyData;
+      const maxVal = Math.max(...data.map(d => d.meals + d.waste));
+      const wrap = document.getElementById('weeklyChart');
+      if (!wrap) return;
+      wrap.innerHTML = data.map(d => {
+        const mH = Math.round((d.meals / maxVal) * 160);
+        const wH = Math.round((d.waste / maxVal) * 160);
+        return `
+          <div class="bar-col">
+            <div class="bar-col-value">${d.meals}</div>
+            <div class="bar-stack">
+              <div class="bar-fill green" style="height:${mH}px"></div>
+              <div class="bar-fill amber" style="height:${wH}px"></div>
+            </div>
+            <div class="bar-col-label">${d.day}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderMonthlyChart() {
+      const data = FoodRescueData.impact.monthlyData;
+      const maxVal = Math.max(...data.map(d => d.meals));
+      const wrap = document.getElementById('monthlyChart');
+      if (!wrap) return;
+      wrap.innerHTML = data.map(d => {
+        const h = Math.round((d.meals / maxVal) * 110);
+        return `
+          <div class="trend-col">
+            <div style="font-size:0.72rem;font-weight:700;color:var(--green-deep)">${d.meals >= 1000 ? (d.meals/1000).toFixed(1)+'k' : d.meals}</div>
+            <div class="trend-bar" style="height:${h}px"></div>
+            <div class="trend-label">${d.month}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderLeaderboard() {
+      const donors = [
+        { rank: 1, name: 'Heritage Bakery', type: 'Bakery', meals: 312, kg: 156 },
+        { rank: 2, name: 'Campus Canteen – Block C', type: 'Canteen', meals: 203, kg: 101 },
+        { rank: 3, name: 'Murugan Mess', type: 'Mess', meals: 148, kg: 74 },
+        { rank: 4, name: 'Annapoorna Restaurant', type: 'Restaurant', meals: 94, kg: 47 },
+        { rank: 5, name: 'GreenBowl Café', type: 'Café', meals: 67, kg: 33 },
+      ];
+      const maxMeals = donors[0].meals;
+      const list = document.getElementById('leaderboardList');
+      if (!list) return;
+      list.innerHTML = donors.map(d => {
+        const rankClass = d.rank <= 3 ? `rank-${d.rank}` : 'rank-n';
+        const rankEmoji = d.rank === 1 ? '🥇' : d.rank === 2 ? '🥈' : d.rank === 3 ? '🥉' : d.rank;
+        return `
+          <div class="leaderboard-item">
+            <div class="rank-badge ${rankClass}">${rankEmoji}</div>
+            <div class="leaderboard-info">
+              <strong>${d.name}</strong>
+              <span>${d.type}</span>
+            </div>
+            <div class="leaderboard-bar-wrap">
+              <div class="leaderboard-bar-fill" style="width:${Math.round(d.meals/maxMeals*100)}%"></div>
+            </div>
+            <div class="leaderboard-meals">
+              <strong>${d.meals} meals</strong>
+              <small>${d.kg} kg saved</small>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  </script>
+</body>
+</html>
