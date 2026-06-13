@@ -1,0 +1,29 @@
+name: Enable GitHub Pages
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [ main ]
+
+jobs:
+  enable-pages:
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Pages via REST API
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            await github.rest.pages.create({
+              owner,
+              repo,
+              source: { branch: 'gh-pages', path: '/' }
+            });
+            console.log('Requested Pages site creation for', `${owner}/${repo}`);
